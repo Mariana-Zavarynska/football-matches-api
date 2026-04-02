@@ -3,15 +3,13 @@
     "target": "ES2022",
     "module": "CommonJS",
     "moduleResolution": "Node",
-
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
-
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "jest"]
   },
-  "include": ["src"]
+  "include": ["src", "tests", "jest.config.ts"]
 }
