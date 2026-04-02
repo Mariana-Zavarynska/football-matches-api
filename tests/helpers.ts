@@ -19,6 +19,6 @@ export const createTestApp = () => {
 
     return {
         app,
-        repository, // optional for assertions
+        repository,
     };
 };

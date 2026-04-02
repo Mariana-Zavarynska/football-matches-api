@@ -4,18 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/app/server.ts",
+    "dev": "nodemon --watch src --ext ts --ignore tests --exec \"tsx src/app/server.ts\"",
     "build": "tsc",
     "start": "node dist/app/server.js",
-    "test": "jest --runInBand",
-    "test:watch": "jest --watch"
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
-    "uuid": "^13.0.0",
+    "uuid": "^9.0.1",
     "ws": "^8.20.0",
     "yup": "^1.7.1"
   },
@@ -24,9 +23,11 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^25.5.0",
     "@types/supertest": "^7.2.0",
+    "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
     "@types/yup": "^0.29.14",
     "jest": "^30.3.0",
+    "nodemon": "^3.1.14",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { SimulationService } from '../../../application/services/simulation.service';
 import { SimulationController } from './types';
+import {toSimulationDto} from "../mappers/simulation.mapper";
 
 
 export const createSimulationController = (
@@ -27,7 +28,7 @@ export const createSimulationController = (
         try {
             const id = req.params.id as string;
             const simulation = await simulationService.finish(id);
-            res.status(200).json(simulation);
+            res.status(200).json(toSimulationDto(simulation));
         } catch (error) {
             next(error);
         }
@@ -41,7 +42,7 @@ export const createSimulationController = (
         try {
             const id = req.params.id as string;
             const simulation = await simulationService.restart(id);
-            res.status(200).json(simulation);
+            res.status(200).json(toSimulationDto(simulation));
         } catch (error) {
             next(error);
         }
@@ -55,7 +56,7 @@ export const createSimulationController = (
         try {
             const id = req.params.id as string;
             const simulation = await simulationService.getById(id);
-            res.status(200).json(simulation);
+            res.status(200).json(toSimulationDto(simulation));
         } catch (error) {
             next(error);
         }
@@ -68,7 +69,7 @@ export const createSimulationController = (
     ): Promise<void> => {
         try {
             const simulations = await simulationService.getAll();
-            res.status(200).json(simulations);
+            res.status(200).json(simulations.map(toSimulationDto));
         } catch (error) {
             next(error);
         }

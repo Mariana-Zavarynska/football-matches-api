@@ -13,7 +13,7 @@ Built with:
 - WebSocket (`ws`)
 - Jest
 - Supertest
-- Zod
+- Yup
 
 ## Features
 

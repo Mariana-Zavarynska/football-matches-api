@@ -23,7 +23,6 @@ export class SimulationService {
 
     async start(name: string): Promise<Simulation> {
         const now = this.clock.now();
-
         if (
             this.lastGlobalStartAt !== null &&
             now - this.lastGlobalStartAt < START_COOLDOWN_MS
@@ -37,7 +36,7 @@ export class SimulationService {
         await this.repository.save(simulation);
         this.lastGlobalStartAt = now;
 
-        this.publisher.publish('simulation_started', this.toDto(simulation));
+        this.publisher.publish('simulation_started', simulation);
         this.runSimulation(simulation.id);
 
         return simulation;
@@ -54,7 +53,7 @@ export class SimulationService {
         simulation.finish(this.clock.now());
 
         await this.repository.save(simulation);
-        this.publisher.publish('simulation_finished', this.toDto(simulation));
+        this.publisher.publish('simulation_finished', simulation);
 
         return simulation;
     }
@@ -70,7 +69,7 @@ export class SimulationService {
         simulation.restart(now);
 
         await this.repository.save(simulation);
-        this.publisher.publish('simulation_restarted', this.toDto(simulation));
+        this.publisher.publish('simulation_restarted', simulation);
 
         this.runSimulation(simulation.id);
 
@@ -96,25 +95,8 @@ export class SimulationService {
     }
 
     private runSimulation(id: string): void {
-        const timer = this.clock.setInterval(async () => {
-            const simulation = await this.repository.getById(id);
-
-            if (!simulation || simulation.status !== SimulationStatus.RUNNING) {
-                return;
-            }
-
-            this.applyRandomGoal(simulation);
-            simulation.incrementTick();
-
-            await this.repository.save(simulation);
-            this.publisher.publish('score_updated', this.toDto(simulation));
-
-            if (simulation.elapsedTicks >= SIMULATION_DURATION_SECONDS) {
-                this.stopTimer(id);
-                simulation.finish(this.clock.now());
-                await this.repository.save(simulation);
-                this.publisher.publish('simulation_finished', this.toDto(simulation));
-            }
+        const timer = this.clock.setInterval(() => {
+            void this.tick(id);
         }, SCORE_INTERVAL_MS);
 
         this.timers.set(id, timer);
@@ -126,6 +108,27 @@ export class SimulationService {
         if (timer) {
             this.clock.clearInterval(timer);
             this.timers.delete(id);
+        }
+    }
+
+    private async tick(id: string): Promise<void> {
+        const simulation = await this.repository.getById(id);
+
+        if (!simulation || simulation.status !== SimulationStatus.RUNNING) {
+            return;
+        }
+
+        this.applyRandomGoal(simulation);
+        simulation.incrementTick();
+
+        await this.repository.save(simulation);
+        this.publisher.publish('score_updated', simulation);
+
+        if (simulation.elapsedTicks >= SIMULATION_DURATION_SECONDS) {
+            this.stopTimer(id);
+            simulation.finish(this.clock.now());
+            await this.repository.save(simulation);
+            this.publisher.publish('simulation_finished', simulation);
         }
     }
 
@@ -143,17 +146,5 @@ export class SimulationService {
         } else {
             match.score.away += 1;
         }
-    }
-
-    private toDto(simulation: Simulation) {
-        return {
-            id: simulation.id,
-            name: simulation.name,
-            status: simulation.status,
-            startedAt: simulation.startedAt,
-            finishedAt: simulation.finishedAt,
-            elapsedTicks: simulation.elapsedTicks,
-            matches: simulation.matches
-        };
     }
 }

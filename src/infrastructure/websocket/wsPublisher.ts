@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import { EventPublisher } from '../../application/ports/eventPublisher';
 
 export class WsPublisher implements EventPublisher {
@@ -8,8 +8,12 @@ export class WsPublisher implements EventPublisher {
         const message = JSON.stringify({ event, data: payload });
 
         this.wss.clients.forEach((client) => {
-            if (client.readyState === client.OPEN) {
-                client.send(message);
+            if (client.readyState === WebSocket.OPEN) {
+                try {
+                    client.send(message);
+                } catch (error) {
+                   console.log("Websocket error", error);
+                }
             }
         });
     }

@@ -11,5 +11,7 @@
     "resolveJsonModule": true,
     "types": ["node", "jest"]
   },
-  "include": ["src", "tests", "jest.config.ts"]
+  "include": ["src", "tests",
+    "jest.config.js"
+  ]
 }
