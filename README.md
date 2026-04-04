@@ -48,6 +48,32 @@ Built with:
 
 This keeps the business logic isolated from Express and WebSocket implementation details.
 
+### Requirements
+
+- Node.js **v20+**
+- npm
+
+## 🚀 Quick Start
+
+```bash
+# install dependencies
+npm install
+
+# run dev server (with hot reload)
+npm run dev
+
+# build project
+npm run build
+
+# run production build
+npm start
+```
+## Testing
+```
+# run all tests
+npm run test
+```
+
 ## API Endpoints
 
 ### Start simulation
@@ -59,4 +85,24 @@ Body:
 ```json
 {
   "name": "Katar 2023"
-}
+} 
+```
+
+### Finish simulation
+
+`POST /api/simulations/:id/finish`
+
+### Restart simulation
+
+`POST /api/simulations/:id/restart`
+
+### Get all simulations
+`GET /api/simulations`
+
+### Get all simulations
+
+`GET /api/simulations/:id`
+
+## WebSocket
+
+`ws://localhost:3000`

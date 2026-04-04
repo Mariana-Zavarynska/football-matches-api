@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "rootDir": ".",
-    "outDir": "dist",
+    "module": "Node16",
+    "moduleResolution": "node16",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": ["src", "tests",
-    "jest.config.js"
-  ]
+  "include": ["src"]
 }
